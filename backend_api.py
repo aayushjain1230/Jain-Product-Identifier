@@ -5,6 +5,7 @@ from typing import List, Optional
 import base64
 import os
 from dotenv import load_dotenv
+from googletrans import Translator
 
 load_dotenv()
 api_key = os.getenv("OPENAI_API_KEY")
@@ -56,6 +57,17 @@ class OutputFormat(BaseModel):
 
 # ------------------- Fast API -------------------
 app = FastAPI(title="Jain Product Identifier")
+translator = Translator()
+
+def translate_if_needed(text: str) -> str:
+    try:
+        detected = translator.detect(text).lang
+        if detected != "en":
+            translated = translator.translate(text, src=detected, dest="en")
+            return translated.text
+        return text
+    except Exception:
+        return text
 
 
 @app.post("/is_jain")
@@ -86,5 +98,8 @@ async def identify_jain(image: UploadFile = File(...)):
     )
 
     response = response.output_parsed.model_dump()
+    for section in ["non_jain_ingredients", "uncertain_ingredients", "jain_ingredients"]:
+    for item in response.get(section, []):
+        item["name"] = translate_if_needed(item["name"])
 
     return response

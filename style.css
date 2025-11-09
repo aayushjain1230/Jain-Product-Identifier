@@ -1,0 +1,119 @@
+/* Global layout */
+body {
+    background-color: #fffdf8;
+    font-family: "Poppins", sans-serif;
+    color: #333;
+}
+
+/* Title */
+h1 {
+    color: #8b4513;
+    text-align: center;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+/* Subtext */
+p, label, small {
+    color: #444;
+    font-size: 15px;
+}
+
+/* Upload + Camera radio */
+.stRadio > div {
+    justify-content: center !important;
+}
+
+.stRadio label {
+    color: #6b4f3a;
+    font-weight: 500;
+}
+
+/* Upload and Camera Input boxes */
+[data-testid="stFileUploader"], [data-testid="stCameraInput"] {
+    border: 2px dashed #c8a97e;
+    border-radius: 14px;
+    background-color: #fff8f0;
+    padding: 20px;
+}
+
+/* Uploaded image display */
+img {
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* Buttons */
+button[kind="primary"] {
+    background-color: #d97c34 !important;
+    color: white !important;
+    border-radius: 10px !important;
+    font-weight: 600 !important;
+    transition: background 0.3s ease;
+}
+button[kind="primary"]:hover {
+    background-color: #c0682e !important;
+}
+
+/* Ingredient boxes */
+div[data-testid="stMarkdownContainer"] > div {
+    transition: transform 0.2s ease;
+}
+div[data-testid="stMarkdownContainer"] > div:hover {
+    transform: translateY(-3px);
+}
+
+/* Section headers */
+h3, h4 {
+    color: #6b3f22;
+    border-left: 4px solid #d97c34;
+    padding-left: 8px;
+    margin-top: 30px;
+    font-weight: 600;
+}
+
+/* Success, warning, and error boxes */
+.success {
+    background-color: #e7ffe7;
+    border-left: 4px solid #5ec65e;
+}
+.warning {
+    background-color: #fff6e0;
+    border-left: 4px solid #f5b041;
+}
+.error {
+    background-color: #ffeaea;
+    border-left: 4px solid #e74c3c;
+}
+
+/* Spinner styling */
+.css-1y4p8pa {
+    color: #d97c34 !important;
+}
+
+/* Divider */
+hr {
+    border: 0;
+    height: 1px;
+    background: #e4d5c3;
+    margin: 30px 0;
+}
+
+/* Footer / Summary */
+h4 {
+    margin-bottom: 10px;
+}
+
+div[style*="Summary"] {
+    background: #fdf9f3;
+    border: 1px solid #f1e2d0;
+    border-radius: 14px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+/* Center align main content */
+.css-18e3th9, .css-1d391kg {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

@@ -3,6 +3,7 @@ import requests
 import tempfile
 
 # Streamlit page setup
+st.markdown("<style>" + open("style.css").read() + "</style>", unsafe_allow_html=True)
 st.set_page_config(page_title="Jain Product Checker", page_icon="🪔", layout="wide")
 
 # Center layout

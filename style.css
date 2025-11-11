@@ -1,0 +1,87 @@
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #fffbe6, #f2ffe6);
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  color: #333;
+}
+
+.container {
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  width: 90%;
+  max-width: 600px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+h1 {
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.btn {
+  background: #85c785;
+  border: none;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  margin: 10px;
+  transition: 0.3s;
+}
+
+.btn:hover {
+  background: #6dbf6d;
+}
+
+.btn.secondary {
+  background: #ffc04c;
+}
+
+.btn.analyze {
+  background: #4caf50;
+  margin-top: 20px;
+}
+
+.upload-section {
+  margin-bottom: 20px;
+}
+
+#preview img {
+  max-width: 100%;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+#result {
+  margin-top: 30px;
+  text-align: left;
+}
+
+.result-card {
+  padding: 10px 15px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.non-jain {
+  background-color: #ffe6e6;
+}
+
+.uncertain {
+  background-color: #fff7e6;
+}
+
+.jain {
+  background-color: #e6ffe6;
+}

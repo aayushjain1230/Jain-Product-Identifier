@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🪔 Jain Product Checker</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>🪔 Jain Product Checker</h1>
+    <p class="subtitle">Upload or capture a picture to check if it's Jain-friendly</p>
+
+    <div class="upload-section">
+      <button id="upload-btn" class="btn">📁 Upload from Device</button>
+      <input type="file" id="file-input" accept="image/*" hidden>
+
+      <button id="camera-btn" class="btn secondary">📷 Take a Picture</button>
+      <video id="camera" autoplay hidden></video>
+      <canvas id="snapshot" hidden></canvas>
+    </div>
+
+    <div id="preview"></div>
+    <button id="analyze-btn" class="btn analyze" disabled>Analyze</button>
+
+    <div id="result"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

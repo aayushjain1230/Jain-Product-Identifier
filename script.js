@@ -91,9 +91,14 @@ async function checkIfJain(imageFile) {
 
 // 🔍 Analyze button click
 analyzeBtn.addEventListener('click', async () => {
-  if (!imageBlob) return;
+  if (!imageBlob) return;  // stops if no image is uploaded or captured
+
   result.innerHTML = "🔍 Analyzing...";
+
+  // send image to backend API
   const data = await checkIfJain(imageBlob);
+
+  // handle response
   if (data) displayResult(data);
   else result.innerHTML = "⚠️ Could not analyze the image. Please try again.";
 });

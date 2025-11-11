@@ -3,43 +3,27 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Jain Product Identifier</title>
+  <title>🪔 Jain Product Checker</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header>
-    <h1>🪷 Jain Product Identifier</h1>
-    <p>Scan or upload food labels to check if ingredients are Jain-friendly</p>
-  </header>
+  <div class="container">
+    <h1>🪔 Jain Product Checker</h1>
+    <p>Upload or take a photo to check if it’s Jain-friendly.</p>
 
-  <main>
-    <!-- Upload section -->
-    <div class="upload-section">
-      <!-- Hidden file input -->
+    <div class="button-group">
+      <button id="upload-btn" class="btn">Upload</button>
       <input type="file" id="file-input" accept="image/*" hidden />
-
-      <!-- Camera and file buttons -->
-      <button id="camera-btn" class="btn">📷 Take Photo</button>
-      <button id="upload-btn" class="btn">📤 Upload Image</button>
-
-      <!-- Analyze button (disabled by default) -->
+      <button id="camera-btn" class="btn">📷 Take Picture</button>
       <button id="analyze-btn" class="btn analyze" disabled>Analyze</button>
     </div>
 
-    <!-- Video preview for camera -->
-    <video id="camera" autoplay playsinline hidden></video>
-
-    <!-- Canvas for snapshots -->
+    <div id="preview" class="preview"></div>
+    <video id="camera" autoplay hidden></video>
     <canvas id="snapshot" hidden></canvas>
+    <div id="result"></div>
+  </div>
 
-    <!-- Image preview -->
-    <div id="preview" class="preview-box"></div>
-
-    <!-- Result section -->
-    <div id="results" class="results"></div>
-  </main>
-
-  <!-- Put your script here, at the bottom -->
-  <script src="main.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>

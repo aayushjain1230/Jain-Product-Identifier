@@ -3,7 +3,6 @@ const fileInput = document.getElementById('file-input');
 const cameraBtn = document.getElementById('camera-btn');
 const analyzeBtn = document.getElementById('analyze-btn');
 const preview = document.getElementById('preview');
-const result = document.getElementById('result');
 const video = document.getElementById('camera');
 const canvas = document.getElementById('snapshot');
 
@@ -78,6 +77,7 @@ async function checkIfJain(imageFile) {
       console.log("✅ Jain Ingredients:", data.jain_ingredients);
 
     console.log("Verdict:", data.summary?.note || "No summary available");
+
     return data;
 
   } catch (error) {
@@ -87,40 +87,11 @@ async function checkIfJain(imageFile) {
 
 // Analyze button event
 analyzeBtn.addEventListener('click', async () => {
-  if (!imageBlob) return;
+  if (!imageBlob) {
+    console.warn("⚠️ No image selected yet!");
+    return;
+  }
 
-  result.innerHTML = "🔍 Analyzing...";
-  const data = await checkIfJain(imageBlob);
-
-  if (data) displayResult(data);
-  else result.innerHTML = "⚠️ Could not analyze the image. Please try again.";
+  console.log("🔍 Sending image to API...");
+  await checkIfJain(imageBlob);
 });
-
-function displayResult(data) {
-  result.innerHTML = "";
-
-  if (data.non_jain_ingredients?.length) {
-    result.innerHTML += `<h3>❌ Non-Jain Ingredients</h3>`;
-    data.non_jain_ingredients.forEach(i => {
-      result.innerHTML += `<div class="result-card non-jain"><b>${i.name}</b><br>${i.reason}</div>`;
-    });
-  }
-
-  if (data.uncertain_ingredients?.length) {
-    result.innerHTML += `<h3>⚠️ Uncertain Ingredients</h3>`;
-    data.uncertain_ingredients.forEach(i => {
-      result.innerHTML += `<div class="result-card uncertain"><b>${i.name}</b><br>${i.reason}</div>`;
-    });
-  }
-
-  if (data.jain_ingredients?.length) {
-    result.innerHTML += `<h3>✅ Jain Ingredients</h3>`;
-    data.jain_ingredients.forEach(i => {
-      result.innerHTML += `<div class="result-card jain"><b>${i.name}</b></div>`;
-    });
-  }
-
-  if (data.summary?.note) {
-    result.innerHTML += `<div class="result-card"><b>Summary:</b> ${data.summary.note}</div>`;
-  }
-}

@@ -11,6 +11,9 @@
     <h1>🪔 Jain Product Checker</h1>
     <p>Upload or take a photo to check if it’s Jain-friendly.</p>
 
+    <!-- Language Dropdown -->
+    <div id="google_translate_element" style="margin-bottom: 1rem;"></div>
+
     <div class="button-group">
       <button id="upload-btn" class="btn">Upload</button>
       <input type="file" id="file-input" accept="image/*" hidden />
@@ -23,9 +26,25 @@
     <canvas id="snapshot" hidden></canvas>
     <div id="result"></div>
   </div>
-    document.addEventListener("DOMContentLoaded", () => {
-      <script src="script.js"></script>
-    });
- 
+
+  <!-- Your JS file -->
+  <script src="script.js"></script>
+
+  <!-- Google Translate -->
+  <script>
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement(
+        {
+          pageLanguage: "en",
+          includedLanguages: "en,hi,gu,ta,te,pa,kn,ml,ur,es,fr,de,it,ar,zh-CN,ja,ko",
+          layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+        },
+        "google_translate_element"
+      );
+    }
+  </script>
+
+  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
 </body>
 </html>

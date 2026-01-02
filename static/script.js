@@ -221,7 +221,9 @@ confirmBtn.addEventListener('click', async () => {
     spinner.style.display = "none";
     if (!res.ok) throw new Error(`Server Error: ${res.status}`);
     const data = await res.json();
+    console.log('API response:', data); // <-- add this line to inspect is_veg/is_vegan and paths
     displayFormattedResult(data);
+// ...existing code...
   } catch (err) {
     spinner.style.display = "none";
     result.textContent = `🚫 Error: ${err.message}`;

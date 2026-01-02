@@ -273,6 +273,7 @@ h1 {
     margin-bottom: 8px;
     border-radius: 8px;
 }
+
 /* Mobile Optimizations */
 @media (max-width: 600px) {
     h1 {

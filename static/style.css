@@ -247,3 +247,29 @@ h1 {
   height: 40px;
   animation: spin 1s linear infinite;
 }
+
+/* Container to keep icons in a single row */
+.icon-group {
+    display: flex;
+    gap: 10px; /* Space between each icon */
+    align-items: center;
+    justify-content: flex-end; /* Keeps them on the right side */
+    min-width: 100px; /* Adjust based on how many icons you have */
+}
+
+/* Specific styling for the icons */
+.status-icon {
+    width: 26px; /* Slightly smaller for multi-icon layout */
+    height: 26px;
+    object-fit: contain;
+}
+
+/* Ensure the result card spreads out text and icons */
+.result-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+}

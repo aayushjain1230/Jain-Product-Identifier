@@ -232,23 +232,30 @@ function displayFormattedResult(data) {
   if (data.summary?.note) html += `<div class="summary"><b>Summary:</b> ${data.summary.note}</div>`;
 
   // Updated image paths to include the images/ folder
-  const sections = [
-      { key: 'non_jain_ingredients', title: 'Non-Jain Ingredients', icon: '/static/images/nonjainicon.png', class: 'non-jain' },
-      { key: 'uncertain_ingredients', title: 'Uncertain Ingredients', icon: '/static/images/uncertainicon.png', class: 'uncertain' },
-      { key: 'jain_ingredients', title: 'Jain Ingredients', icon: '/static/images/jainicon.png', class: 'jain' }
-  ];
+  // This replaces the part inside your displayFormattedResult function
+const sections = [
+    { key: 'non_jain_ingredients', title: 'Non-Jain Ingredients', jainIcon: '/static/images/nonjainicon.png', class: 'non-jain' },
+    { key: 'uncertain_ingredients', title: 'Uncertain Ingredients', jainIcon: '/static/images/uncertainicon.png', class: 'uncertain' },
+    { key: 'jain_ingredients', title: 'Jain Ingredients', jainIcon: '/static/images/jainicon.png', class: 'jain' }
+];
 
-  sections.forEach(sec => {
-      if (data[sec.key]?.length) {
-          html += `<div class="section-title"><img src="${sec.icon}" class="result-icon"><h3>${sec.title}</h3></div>`;
-          html += data[sec.key].map(i => `
-            <div class="result-card ${sec.class}">
-              <div class="result-text"><b>${i.name}</b>${i.reason ? '<br>' + i.reason : ''}</div>
-              <img src="${sec.icon}" class="result-icon">
+sections.forEach(sec => {
+    if (data[sec.key]?.length) {
+        html += `<div class="section-title"><h3>${sec.title}</h3></div>`;
+        html += data[sec.key].map(i => `
+          <div class="result-card ${sec.class}">
+            <div class="result-text">
+              <b>${i.name}</b>${i.reason ? '<br>' + i.reason : ''}
             </div>
-          `).join('');
-      }
-  });
+            <div class="icon-group">
+              <img src="/static/images/veg_icon.png" class="status-icon" title="Vegetarian">
+              <img src="/static/images/vegan_icon.png" class="status-icon" title="Vegan">
+              <img src="${sec.jainIcon}" class="status-icon" title="Jain Status">
+            </div>
+          </div>
+        `).join('');
+    }
+});
   result.innerHTML = html || "⚠️ No analysis results returned.";
 }
 

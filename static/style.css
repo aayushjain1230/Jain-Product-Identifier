@@ -273,3 +273,31 @@ h1 {
     margin-bottom: 8px;
     border-radius: 8px;
 }
+/* Mobile Optimizations */
+@media (max-width: 600px) {
+    h1 {
+        font-size: 1.5rem; /* Shrink title slightly */
+        margin-top: 16px;
+    }
+
+    .result-card {
+        flex-direction: column; /* Stack name above icons */
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .icon-group {
+        justify-content: flex-start; /* Align icons to the left on mobile */
+        width: 100%;
+    }
+
+    .status-icon {
+        width: 22px; /* Smaller icons for small screens */
+        height: 22px;
+    }
+
+    .upload-btn {
+        padding: 14px 20px;
+        font-size: 1rem;
+    }
+}

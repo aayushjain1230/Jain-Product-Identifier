@@ -24,7 +24,7 @@ let originalImg = null;
 let cropState = 'idle'; // 'idle', 'moving', 'resizing'
 let currentHandle = null;
 let cropBox = { x: 0, y: 0, w: 0, h: 0 };
-const handleSize = 30; // Larger touch area for handles
+const handleSize = 30; 
 let startX, startY;
 
 // --- TIP LOGIC ---
@@ -73,16 +73,13 @@ fileInput.addEventListener('change', (e) => {
 });
 
 // --- CROP BOX INTERACTION LOGIC ---
-
 function getHandle(mx, my) {
     const { x, y, w, h } = cropBox;
     const tolerance = handleSize;
-
     const isNear = (px, py) => (
         mx >= px - tolerance && mx <= px + tolerance && 
         my >= py - tolerance && my <= py + tolerance
     );
-
     if (isNear(x, y)) return 'nw';
     if (isNear(x + w, y)) return 'ne';
     if (isNear(x + w, y + h)) return 'se';
@@ -95,13 +92,10 @@ function handleStart(e) {
     const rect = cropCanvas.getBoundingClientRect();
     const scaleX = cropCanvas.width / rect.width;
     const scaleY = cropCanvas.height / rect.height;
-    
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
     const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-
     startX = (clientX - rect.left) * scaleX;
     startY = (clientY - rect.top) * scaleY;
-
     currentHandle = getHandle(startX, startY);
     if (currentHandle) {
         cropState = (currentHandle === 'body') ? 'moving' : 'resizing';
@@ -111,17 +105,13 @@ function handleStart(e) {
 function handleMove(e) {
     if (cropState === 'idle') return;
     e.preventDefault();
-
     const rect = cropCanvas.getBoundingClientRect();
     const scaleX = cropCanvas.width / rect.width;
     const scaleY = cropCanvas.height / rect.height;
-
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
     const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-
     const endX = (clientX - rect.left) * scaleX;
     const endY = (clientY - rect.top) * scaleY;
-
     const dx = endX - startX;
     const dy = endY - startY;
 
@@ -138,7 +128,6 @@ function handleMove(e) {
         cropBox.w = Math.max(50, cropBox.w);
         cropBox.h = Math.max(50, cropBox.h);
     }
-
     startX = endX;
     startY = endY;
     drawCropBox();
@@ -149,7 +138,6 @@ function handleEnd() { cropState = 'idle'; }
 cropCanvas.addEventListener('mousedown', handleStart);
 window.addEventListener('mousemove', handleMove);
 window.addEventListener('mouseup', handleEnd);
-
 cropCanvas.addEventListener('touchstart', handleStart, {passive: false});
 window.addEventListener('touchmove', handleMove, {passive: false});
 window.addEventListener('touchend', handleEnd);
@@ -159,18 +147,14 @@ function drawCropBox() {
     if (!cropCtx || !originalImg) return;
     cropCtx.drawImage(originalImg, 0, 0, cropCanvas.width, cropCanvas.height);
     const { x, y, w, h } = cropBox;
-    
     cropCtx.fillStyle = 'rgba(0, 0, 0, 0.6)';
     cropCtx.fillRect(0, 0, cropCanvas.width, y);
     cropCtx.fillRect(0, y + h, cropCanvas.width, cropCanvas.height - (y + h));
     cropCtx.fillRect(0, y, x, h);
     cropCtx.fillRect(x + w, y, cropCanvas.width - (x + w), h);
-
     cropCtx.strokeStyle = '#e53935'; 
     cropCtx.lineWidth = Math.max(4, cropCanvas.width / 150);
     cropCtx.strokeRect(x, y, w, h);
-
-    // Draw White Corner Handles
     cropCtx.fillStyle = '#ffffff';
     const s = handleSize / 1.5;
     [[x,y], [x+w,y], [x+w,y+h], [x,y+h]].forEach(([hx, hy]) => {
@@ -186,7 +170,6 @@ cropBtn.addEventListener("click", () => {
         cropCanvas.width = img.naturalWidth;
         cropCanvas.height = img.naturalHeight;
         cropBox = { x: img.naturalWidth * 0.2, y: img.naturalHeight * 0.2, w: img.naturalWidth * 0.6, h: img.naturalHeight * 0.3 };
-        
         preview.style.display = "none";
         cropButtons.style.display = "none";
         cropContainer.style.display = "block";
@@ -201,7 +184,6 @@ confirmCropBtn.addEventListener("click", () => {
     tempCanvas.width = cropBox.w;
     tempCanvas.height = cropBox.h;
     tempCtx.drawImage(originalImg, cropBox.x, cropBox.y, cropBox.w, cropBox.h, 0, 0, cropBox.w, cropBox.h);
-
     tempCanvas.toBlob(blob => {
         selectedFile = blob;
         preview.src = URL.createObjectURL(blob);
@@ -225,10 +207,8 @@ confirmBtn.addEventListener('click', async () => {
   cropButtons.style.display = "none";
   spinner.style.display = "block"; 
   result.textContent = "Analyzing ingredients...";
-
   const formData = new FormData();
   formData.append('file', selectedFile, "label.jpg");
-
   try {
     const res = await fetch("https://jain-product-identifier-api.onrender.com/classify", {
       method: "POST",
@@ -251,11 +231,12 @@ function displayFormattedResult(data) {
   let html = "";
   if (data.summary?.note) html += `<div class="summary"><b>Summary:</b> ${data.summary.note}</div>`;
 
+  // Updated image paths to include the images/ folder
   const sections = [
-    { key: 'non_jain_ingredients', title: 'Non-Jain Ingredients', icon: 'images/nonjainicon.png', class: 'non-jain' },
-    { key: 'uncertain_ingredients', title: 'Uncertain Ingredients', icon: 'images/uncertainicon.png', class: 'uncertain' },
-    { key: 'jain_ingredients', title: 'Jain Ingredients', icon: 'images/jainicon.png', class: 'jain' }
-];
+      { key: 'non_jain_ingredients', title: 'Non-Jain Ingredients', icon: '/static/images/nonjainicon.png', class: 'non-jain' },
+      { key: 'uncertain_ingredients', title: 'Uncertain Ingredients', icon: '/static/images/uncertainicon.png', class: 'uncertain' },
+      { key: 'jain_ingredients', title: 'Jain Ingredients', icon: '/static/images/jainicon.png', class: 'jain' }
+  ];
 
   sections.forEach(sec => {
       if (data[sec.key]?.length) {
@@ -273,7 +254,8 @@ function displayFormattedResult(data) {
 
 // --- MODAL LOGIC ---
 const infoModal = document.getElementById("infoModal");
-document.getElementById("info-btn").onclick = () => infoModal.style.display = "flex";
+const infoBtn = document.getElementById("info-btn");
+if(infoBtn) infoBtn.onclick = () => infoModal.style.display = "flex";
 document.getElementById("closeModal").onclick = () => infoModal.style.display = "none";
 document.getElementById("modalOk").onclick = () => infoModal.style.display = "none";
 window.onclick = (e) => { if (e.target === infoModal) infoModal.style.display = "none"; };

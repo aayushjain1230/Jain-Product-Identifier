@@ -7,6 +7,10 @@ const scanAnimation = document.getElementById('scanAnimation');
 const tipBox = document.getElementById("tip-box");
 const tipText = document.getElementById("tip-text");
 
+// Image base + cache-bust version
+const IMG_BASE = '/static/images';
+const IMG_VERSION = '?v=1.2';
+
 // New Crop & Action Elements
 const cropContainer = document.getElementById('crop-container');
 const cropCanvas = document.getElementById('cropCanvas');
@@ -261,9 +265,9 @@ function displayFormattedResult(data) {
                 <b>${i.name}</b>${reasonHtml}
               </div>
               <div class="icon-group" aria-hidden="true">
-                ${isVeg ? `<img src="/static/images/veg_icon.png" class="status-icon" title="Vegetarian" alt="Vegetarian">` : ''}
-                ${isVegan ? `<img src="/static/images/vegan_icon.png" class="status-icon" title="Vegan" alt="Vegan">` : ''}
-                <img src="${sec.jainIcon}" class="status-icon" title="${sec.title}" alt="${sec.title}">
+                ${isVeg ? `<img src="${IMG_BASE}/veg_icon.png${IMG_VERSION}" class="status-icon" title="Vegetarian" alt="Vegetarian" onerror="this.style.display='none';console.warn('Missing image:', this.src)">` : ''}
+                ${isVegan ? `<img src="${IMG_BASE}/vegan_icon.png${IMG_VERSION}" class="status-icon" title="Vegan" alt="Vegan" onerror="this.style.display='none';console.warn('Missing image:', this.src)">` : ''}
+                <img src="${sec.jainIcon}${IMG_VERSION}" class="status-icon" title="${sec.title}" alt="${sec.title}" onerror="this.style.display='none';console.warn('Missing image:', this.src)">
               </div>
             </div>`;
           }).join('');

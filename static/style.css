@@ -249,29 +249,26 @@ h1 {
 }
 
 /* Container to keep icons in a single row */
-/* Container for the Veg, Vegan, and Jain icons */
-.icon-group {
-    display: flex;
-    gap: 8px; /* Space between icons */
-    align-items: center;
-    margin-left: auto; /* Pushes icons to the right side of the card */
-}
-
-/* Ensure all status icons are the same size */
-.status-icon {
-    width: 24px;
-    height: 24px;
-    object-fit: contain;
-}
-
-/* Make sure the result card can handle multiple icons */
 .result-card {
+    position: relative;
+    padding-right: 96px; /* space for the icon group on the right */
+}
+
+/* right-aligned row of small icons */
+.icon-group {
+    position: absolute;
+    top: 12px;
+    right: 12px;
     display: flex;
-    justify-content: space-between;
+    gap: 8px;
     align-items: center;
-    padding: 12px;
-    margin-bottom: 8px;
-    border-radius: 8px;
+    justify-content: flex-end;
+}
+
+.status-icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
 }
 
 /* Mobile Optimizations */

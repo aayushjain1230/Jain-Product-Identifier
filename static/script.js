@@ -252,10 +252,10 @@ function displayFormattedResult(data) {
   if (data.summary?.note) html += `<div class="summary"><b>Summary:</b> ${data.summary.note}</div>`;
 
   const sections = [
-      { key: 'non_jain_ingredients', title: 'Non-Jain Ingredients', icon: 'nonjainicon.png', class: 'non-jain' },
-      { key: 'uncertain_ingredients', title: 'Uncertain Ingredients', icon: 'uncertainicon.png', class: 'uncertain' },
-      { key: 'jain_ingredients', title: 'Jain Ingredients', icon: 'jainicon.png', class: 'jain' }
-  ];
+    { key: 'non_jain_ingredients', title: 'Non-Jain Ingredients', icon: 'images/nonjainicon.png', class: 'non-jain' },
+    { key: 'uncertain_ingredients', title: 'Uncertain Ingredients', icon: 'images/uncertainicon.png', class: 'uncertain' },
+    { key: 'jain_ingredients', title: 'Jain Ingredients', icon: 'images/jainicon.png', class: 'jain' }
+];
 
   sections.forEach(sec => {
       if (data[sec.key]?.length) {

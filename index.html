@@ -1,50 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🪔 Jain Product Checker</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>But Is It Jain?</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
+
+<div id="infoModal" class="modal">
+  <div class="modal-content">
+    <span id="closeModal" class="close">&times;</span>
+    <h2>How to Use This App</h2>
+    <p>1. Find a product with an ingredient label.</p>
+    <p>2. Tap <b>Scan a Label</b> and take a clear photo of the full ingredient list.</p>
+    <p>3. Wait a moment while the app analyzes it.</p>
+    <p>4. View the breakdown showing which ingredients are Jain-friendly or not.</p>
+    <button id="modalOk" class="modal-btn">Got it</button>
+  </div>
+</div>
+
 <body>
+
   <div class="container">
-    <h1>🪔 Jain Product Checker</h1>
-    <p>Upload or take a photo to check if it’s Jain-friendly.</p>
+    <h1>But Is It Jain?</h1>
 
-    <!-- Language Dropdown -->
-    <div id="google_translate_element" style="margin-bottom: 1rem;"></div>
+    <div id="preview-container">
+      <img id="preview" alt="" style="display:none;">
 
-    <div class="button-group">
-      <button id="upload-btn" class="btn">Upload</button>
-      <input type="file" id="file-input" accept="image/*" hidden />
-      <button id="camera-btn" class="btn">📷 Take Picture</button>
-      <button id="analyze-btn" class="btn analyze" disabled>Analyze</button>
+      <div id="crop-container" style="display:none; text-align:center; width: 100%;">
+        <canvas id="cropCanvas"></canvas>
+        <div class="crop-controls">
+          <button id="confirmCropBtn" class="action-btn primary-btn" type="button">Apply Crop</button>
+          <button id="cancelCropBtn" class="action-btn" type="button">Cancel</button>
+        </div>
+      </div>
+
+      <dotlottie-wc 
+        id="scanAnimation"
+        src="https://lottie.host/4895fcc9-7c2d-4d10-b66f-e3527a24bc18/sF20dKgvu1.lottie" 
+        style="width: 300px; height: 300px" 
+        autoplay 
+        loop>
+      </dotlottie-wc>
+
+      <div id="crop-buttons" style="display:none;">
+        <button id="crop-btn" class="action-btn" type="button">✂ Crop</button>
+        <button id="retake-btn" class="action-btn" type="button">🔄 Retake</button>
+        <button id="confirm-btn" class="action-btn primary-btn" type="button">✔ Confirm</button>
+      </div>
+      
+      <div id="tip-box">
+        <span class="tip-label">Tip:</span>
+        <span id="tip-text">Hold your phone steady for a clear scan.</span>
+      </div>
     </div>
 
-    <div id="preview" class="preview"></div>
-    <video id="camera" autoplay hidden></video>
-    <canvas id="snapshot" hidden></canvas>
-    <div id="result"></div>
+    <div id="result_desc"></div>
+    <div id="spinner" class="spinner" style="display:none;"></div>
   </div>
 
-  <!-- Your JS file -->
+  <div class="bottom-bar">
+    <label for="uploaded_image" class="upload-btn">Scan a Label</label>
+    <div id="info-btn" class="info-icon">i</div>
+    <input type="file" id="uploaded_image" accept="image/*" capture="environment">
+  </div>
+
   <script src="script.js"></script>
-
-  <!-- Google Translate -->
-  <script>
-    function googleTranslateElementInit() {
-      new google.translate.TranslateElement(
-        {
-          pageLanguage: "en",
-          includedLanguages: "en,hi,gu,ta,te,pa,kn,ml,ur,es,fr,de,it,ar,zh-CN,ja,ko",
-          layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-        },
-        "google_translate_element"
-      );
-    }
-  </script>
-
-  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
+  <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.5/dist/dotlottie-wc.js" type="module"></script>
 </body>
 </html>

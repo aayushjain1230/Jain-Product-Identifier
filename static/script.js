@@ -225,6 +225,17 @@ confirmBtn.addEventListener('click', async () => {
   }
 });
 
+// --- HELPER: parse boolean-like values safely ---
+function parseBool(v) {
+  if (typeof v === 'boolean') return v;
+  if (typeof v === 'number') return v !== 0;
+  if (typeof v === 'string') {
+    const s = v.trim().toLowerCase();
+    return ['true', 'yes', 'y', '1'].includes(s);
+  }
+  return false;
+}
+
 // --- RESULT RENDERING ---
 function displayFormattedResult(data) {
   result.style.display = "block";
@@ -238,20 +249,24 @@ function displayFormattedResult(data) {
   ];
 
   sections.forEach(sec => {
-      if (data[sec.key]?.length) {
+      if (Array.isArray(data[sec.key]) && data[sec.key].length) {
           html += `<div class="section-title"><h3>${sec.title}</h3></div>`;
-          html += data[sec.key].map(i => `
+          html += data[sec.key].map(i => {
+            const isVeg = parseBool(i.is_veg);
+            const isVegan = parseBool(i.is_vegan);
+            const reasonHtml = i.reason ? `<br>${i.reason}` : '';
+            return `
             <div class="result-card ${sec.class}">
               <div class="result-text">
-                <b>${i.name}</b>${i.reason ? '<br>' + i.reason : ''}
+                <b>${i.name}</b>${reasonHtml}
               </div>
-              <div class="icon-group">
-                ${i.is_veg ? `<img src="/static/images/veg_icon.png" class="status-icon" title="Vegetarian">` : ''}
-                ${i.is_vegan ? `<img src="/static/images/vegan_icon.png" class="status-icon" title="Vegan">` : ''}
-                <img src="${sec.jainIcon}" class="status-icon" title="Jain Status">
+              <div class="icon-group" aria-hidden="true">
+                ${isVeg ? `<img src="/static/images/veg_icon.png" class="status-icon" title="Vegetarian" alt="Vegetarian">` : ''}
+                ${isVegan ? `<img src="/static/images/vegan_icon.png" class="status-icon" title="Vegan" alt="Vegan">` : ''}
+                <img src="${sec.jainIcon}" class="status-icon" title="${sec.title}" alt="${sec.title}">
               </div>
-            </div>
-          `).join('');
+            </div>`;
+          }).join('');
       }
   });
   result.innerHTML = html || "⚠️ No analysis results returned.";

@@ -291,8 +291,42 @@ function parseBool(v) {
 function displayFormattedResult(data) {
   result.style.display = "block";
   let html = "";
-  if (data.summary?.note) html += `<div class="summary"><b>Summary:</b> ${data.summary.note}</div>`;
 
+  // --- 1. OVERALL STATUS SUMMARY ---
+  let statusTitle = "Jain";
+  let statusClass = "jain-status";
+  let statusIcon = "✅";
+  let statusMessage = "This product appears to be Jain-friendly.";
+
+  if (Array.isArray(data.non_jain_ingredients) && data.non_jain_ingredients.length > 0) {
+      statusTitle = "Non-Jain";
+      statusClass = "non-jain-status";
+      statusIcon = "🚫";
+      statusMessage = "This product contains non-Jain ingredients.";
+  } else if (Array.isArray(data.uncertain_ingredients) && data.uncertain_ingredients.length > 0) {
+      statusTitle = "Uncertain";
+      statusClass = "uncertain-status";
+      statusIcon = "⚠️";
+      statusMessage = "Generally Jain, but contains ingredients to eat at your own risk.";
+  }
+
+  // Add the status box to the top
+  html += `
+    <div class="overall-status ${statusClass}">
+        <div class="status-header">
+            <span class="status-icon-large">${statusIcon}</span>
+            <h2>${statusTitle}</h2>
+        </div>
+        <p>${statusMessage}</p>
+    </div>
+  `;
+
+  // --- 2. EXISTING NOTE/SUMMARY ---
+  if (data.summary?.note) {
+      html += `<div class="summary"><b>AI Analysis:</b> ${data.summary.note}</div>`;
+  }
+
+  // --- 3. DETAILED INGREDIENT LISTS ---
   const sections = [
       { key: 'non_jain_ingredients', title: 'Non-Jain Ingredients', jainIcon: '/static/images/nonjainicon.png', class: 'non-jain' },
       { key: 'uncertain_ingredients', title: 'Uncertain Ingredients', jainIcon: '/static/images/uncertainicon.png', class: 'uncertain' },
@@ -311,15 +345,16 @@ function displayFormattedResult(data) {
               <div class="result-text">
                 <b>${i.name}</b>${reasonHtml}
               </div>
-              <div class="icon-group" aria-hidden="true">
-                ${isVeg ? `<span class="status-emoji" title="Vegetarian" aria-label="Vegetarian">🥬</span>` : ''}
-                ${isVegan ? `<span class="status-emoji" title="Vegan" aria-label="Vegan">🌱</span>` : ''}
-                <img src="${sec.jainIcon}${IMG_VERSION}" class="status-icon" title="${sec.title}" alt="${sec.title}" onerror="this.style.display='none';console.warn('Missing image:', this.src)">
+              <div class="icon-group">
+                ${isVeg ? `<span class="status-emoji" title="Vegetarian">🥬</span>` : ''}
+                ${isVegan ? `<span class="status-emoji" title="Vegan">🌱</span>` : ''}
+                <img src="${sec.jainIcon}${IMG_VERSION}" class="status-icon" alt="${sec.title}">
               </div>
             </div>`;
           }).join('');
       }
   });
+
   result.innerHTML = html || "⚠️ No analysis results returned.";
 }
 

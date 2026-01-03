@@ -331,8 +331,8 @@ function displayFormattedResult(data) {
                 <b>${i.name}</b>${reasonHtml}
               </div>
               <div class="icon-group" aria-hidden="true">
-                ${isVeg ? `<img src="${IMG_BASE}/veg_icon.png${IMG_VERSION}" class="status-icon" title="Vegetarian" alt="Vegetarian" onerror="this.style.display='none';console.warn('Missing image:', this.src)">` : ''}
-                ${isVegan ? `<img src="${IMG_BASE}/vegan_icon.png${IMG_VERSION}" class="status-icon" title="Vegan" alt="Vegan" onerror="this.style.display='none';console.warn('Missing image:', this.src)">` : ''}
+                ${isVeg ? `<span class="status-emoji" title="Vegetarian" aria-label="Vegetarian">🥬</span>` : ''}
+                ${isVegan ? `<span class="status-emoji" title="Vegan" aria-label="Vegan">🌱</span>` : ''}
                 <img src="${sec.jainIcon}${IMG_VERSION}" class="status-icon" title="${sec.title}" alt="${sec.title}" onerror="this.style.display='none';console.warn('Missing image:', this.src)">
               </div>
             </div>`;

@@ -15,17 +15,21 @@ genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 model = genai.GenerativeModel('gemini-1.5-flash')
 
 PROMPT = """
-Analyze the provided image of a product ingredient list. Return strict JSON only.
-For each detected ingredient produce an object with:
-- name: original ingredient string
+Analyze the image of this product ingredient list. 
+IMPORTANT: If the text is in a language other than English (e.g., Arabic, Hindi, etc.), 
+first translate the ingredient name accurately into English.
+
+Return strict JSON only. For each detected ingredient:
+- name: The ORIGINAL ingredient string from the image
+- translation: The English translation of the ingredient name
 - classification: one of "Jain", "Non-Jain", or "Uncertain"
-- reason: short explanation (optional)
+- reason: short explanation in English
 - is_veg: true or false (boolean)
 - is_vegan: true or false (boolean)
 
 The overall response must have this shape:
 {
-  "summary": {"note": "General assessment"},
+  "summary": {"note": "General assessment in English"},
   "jain_ingredients": [ ... ],
   "non_jain_ingredients": [ ... ],
   "uncertain_ingredients": [ ... ]
@@ -147,3 +151,4 @@ def classify_ingredients():
 
 if __name__ == '__main__':
     app.run(debug=True)
+

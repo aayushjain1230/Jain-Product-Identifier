@@ -214,7 +214,7 @@ confirmCropBtn.addEventListener("click", () => {
         
         // --- ADD THE LINE HERE ---
         if (revertBtn) revertBtn.style.display = "inline-block";
-        }
+        
         
 
     }, "image/jpeg", 0.95);

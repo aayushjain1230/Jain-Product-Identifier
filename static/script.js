@@ -342,18 +342,23 @@ function displayFormattedResult(data) {
             const isVeg = parseBool(i.is_veg);
             const isVegan = parseBool(i.is_vegan);
             const reasonHtml = i.reason ? `<br>${i.reason}` : '';
+            
+            // --- UPDATED INGREDIENT CARD LOGIC ---
+            // This displays: Arabic Name (English Translation)
+            const displayName = i.translation ? `${i.name} (${i.translation})` : i.name;
+
             return `
-            <div class="result-card ${sec.class}">
-              <div class="result-text">
-                <b>${i.name}</b>${reasonHtml}
-              </div>
-              <div class="icon-group">
-                ${isVeg ? `<span class="status-emoji" title="Vegetarian">🥬</span>` : ''}
-                ${isVegan ? `<span class="status-emoji" title="Vegan">🌱</span>` : ''}
-                <img src="${sec.jainIcon}${IMG_VERSION}" class="status-icon" alt="${sec.title}">
-              </div>
-            </div>`;
-          }).join('');
+                <div class="result-card ${sec.class}">
+                    <div class="result-text">
+                        <b>${displayName}</b>${reasonHtml}
+                    </div>
+                    <div class="icon-group">
+                        ${isVeg ? `<span class="status-emoji" title="Vegetarian">🥬</span>` : ''}
+                        ${isVegan ? `<span class="status-emoji" title="Vegan">🌱</span>` : ''}
+                        <img src="${sec.jainIcon}${IMG_VERSION}" class="status-icon" alt="${sec.title}">
+                    </div>
+                </div>`;
+        }).join('');
       }
   });
 

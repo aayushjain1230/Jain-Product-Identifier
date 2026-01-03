@@ -213,10 +213,13 @@ confirmCropBtn.addEventListener("click", () => {
         cropButtons.style.display = "flex";
         
         // --- ADD THE LINE HERE ---
-        if (revertBtn) revertBtn.style.display = "inline-block";
-        
-    }, "image/jpeg", 0.95);
+        if (revertBtn) {
+            revertBtn.style.display = "inline-block";
+        }
+        // -------------------------
 
+    }, "image/jpeg", 0.95);
+});
 
 // --- REVERT LOGIC ---
 if (revertBtn) {
@@ -295,18 +298,18 @@ function displayFormattedResult(data) {
   let html = "";
 
   // This block creates the Overview/Summary at the top
-  let statusTitle = "Jain"; // Already capitalized
+  let statusTitle = "Jain";
   let statusClass = "jain-status";
   let statusIcon = "✅";
   let statusMessage = "This product appears to be Jain-friendly.";
 
-  if (data.non_jain_ingredients && data.non_jain_ingredients.length > 0) {
-      statusTitle = "Non-Jain"; // Updated to "Non-Jain"
+  if (data.non_jain_ingredients?.length > 0) {
+      statusTitle = "Non-Jain";
       statusClass = "non-jain-status";
       statusIcon = "🚫";
       statusMessage = "This product contains non-Jain ingredients.";
-  } else if (Array.isArray(data.uncertain_ingredients) && data.uncertain_ingredients.length > 0) {
-      statusTitle = "Uncertain"; // Already capitalized
+  } else if (data.uncertain_ingredients?.length > 0) {
+      statusTitle = "Uncertain";
       statusClass = "uncertain-status";
       statusIcon = "⚠️";
       statusMessage = "Generally Jain, but contains ingredients to eat at your own risk.";
@@ -364,11 +367,3 @@ if(infoBtn) infoBtn.onclick = () => infoModal.style.display = "flex";
 document.getElementById("closeModal").onclick = () => infoModal.style.display = "none";
 document.getElementById("modalOk").onclick = () => infoModal.style.display = "none";
 window.onclick = (e) => { if (e.target === infoModal) infoModal.style.display = "none"; };
-
-// --- UPLOAD BUTTON TRIGGER ---
-const scanLabelBtn = document.getElementById('scan-label-btn');
-if (scanLabelBtn && fileInput) {
-    scanLabelBtn.addEventListener('click', () => {
-        fileInput.click();
-    });
-}

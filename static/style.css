@@ -308,3 +308,13 @@ h1 {
     height: auto;
     border: 2px solid #e53935;
 }
+
+.status-emoji {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    font-size: 18px;
+    line-height: 1;
+}

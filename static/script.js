@@ -298,18 +298,18 @@ function displayFormattedResult(data) {
   let html = "";
 
   // This block creates the Overview/Summary at the top
-  let statusTitle = "Jain";
+  let statusTitle = "Jain"; // Already capitalized
   let statusClass = "jain-status";
   let statusIcon = "✅";
   let statusMessage = "This product appears to be Jain-friendly.";
 
-  if (data.non_jain_ingredients?.length > 0) {
-      statusTitle = "Non-Jain";
+  if (Array.isArray(data.non_jain_ingredients) && data.non_jain_ingredients.length > 0) {
+      statusTitle = "Non-Jain"; // Updated to "Non-Jain"
       statusClass = "non-jain-status";
       statusIcon = "🚫";
       statusMessage = "This product contains non-Jain ingredients.";
-  } else if (data.uncertain_ingredients?.length > 0) {
-      statusTitle = "Uncertain";
+  } else if (Array.isArray(data.uncertain_ingredients) && data.uncertain_ingredients.length > 0) {
+      statusTitle = "Uncertain"; // Already capitalized
       statusClass = "uncertain-status";
       statusIcon = "⚠️";
       statusMessage = "Generally Jain, but contains ingredients to eat at your own risk.";

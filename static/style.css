@@ -392,3 +392,7 @@ h1 {
 .jain-status { background-color: #e8f5e9; border-color: #4caf50; color: #1b5e20; }
 .non-jain-status { background-color: #ffebee; border-color: #ef5350; color: #b71c1c; }
 .uncertain-status { background-color: #fffde7; border-color: #fbc02d; color: #f57f17; }
+
+.status-header h2 {
+    text-transform: capitalize;
+}

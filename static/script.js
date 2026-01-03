@@ -28,7 +28,7 @@ let originalImg = null;
 let cropState = 'idle'; // 'idle', 'moving', 'resizing'
 let currentHandle = null;
 let cropBox = { x: 0, y: 0, w: 0, h: 0 };
-const handleSize = 30; 
+const handleSize = 40; 
 let startX, startY;
 
 // --- TIP LOGIC ---
@@ -71,7 +71,7 @@ fileInput.addEventListener('change', (e) => {
     preview.style.display = "block";
     cropButtons.style.display = "flex"; 
     result.style.display = "block";
-    result.textContent = "Photo loaded. Crop if needed or confirm to scan.";
+    result.innerHTML = '<div style="text-align:center; padding: 10px; color: #666;">Photo loaded. Crop if needed or confirm to scan.</div>';
   };
   reader.readAsDataURL(file);
 });
@@ -79,61 +79,107 @@ fileInput.addEventListener('change', (e) => {
 // --- CROP BOX INTERACTION LOGIC ---
 function getHandle(mx, my) {
     const { x, y, w, h } = cropBox;
-    const tolerance = handleSize;
+    
+    // Increase tolerance specifically for touch. 
+    // This creates a larger "invisible" hit box around the corners.
+    const tolerance = handleSize * 1.5; 
+
     const isNear = (px, py) => (
         mx >= px - tolerance && mx <= px + tolerance && 
         my >= py - tolerance && my <= py + tolerance
     );
+
+    // Check corners first (Top-Left, Top-Right, Bottom-Right, Bottom-Left)
     if (isNear(x, y)) return 'nw';
     if (isNear(x + w, y)) return 'ne';
     if (isNear(x + w, y + h)) return 'se';
     if (isNear(x, y + h)) return 'sw';
+
+    // Check if the touch is anywhere inside the box to move the whole thing
     if (mx > x && mx < x + w && my > y && my < y + h) return 'body';
+
     return null;
 }
 
 function handleStart(e) {
     const rect = cropCanvas.getBoundingClientRect();
+    
+    // Scale factors to account for CSS resizing
     const scaleX = cropCanvas.width / rect.width;
     const scaleY = cropCanvas.height / rect.height;
+
+    // Support both Touch (iPhone) and Mouse
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
     const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+    // Convert to internal canvas coordinates
     startX = (clientX - rect.left) * scaleX;
     startY = (clientY - rect.top) * scaleY;
+
+    // Check if the user touched a handle (corner) or the body of the box
     currentHandle = getHandle(startX, startY);
+
     if (currentHandle) {
+        // Prevent the iPhone from trying to select text or scroll during the initial touch
+        if (e.cancelable) e.preventDefault();
+        
         cropState = (currentHandle === 'body') ? 'moving' : 'resizing';
     }
 }
 
 function handleMove(e) {
     if (cropState === 'idle') return;
-    e.preventDefault();
+
+    // Prevent iPhone from scrolling while you drag the crop box
+    if (e.cancelable) {
+        e.preventDefault();
+    }
+
     const rect = cropCanvas.getBoundingClientRect();
+    
+    // Calculate scale factors in case the canvas is resized by CSS
     const scaleX = cropCanvas.width / rect.width;
     const scaleY = cropCanvas.height / rect.height;
+
+    // Support both Touch (iPhone/Android) and Mouse (Computer)
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
     const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+    // Convert screen coordinates to Canvas coordinates
     const endX = (clientX - rect.left) * scaleX;
     const endY = (clientY - rect.top) * scaleY;
+
+    // Calculate how much the finger/mouse moved
     const dx = endX - startX;
     const dy = endY - startY;
 
     if (cropState === 'moving') {
+        // Move the entire box
         cropBox.x += dx;
         cropBox.y += dy;
+
+        // Keep the box inside the image boundaries
         cropBox.x = Math.max(0, Math.min(cropBox.x, cropCanvas.width - cropBox.w));
         cropBox.y = Math.max(0, Math.min(cropBox.y, cropCanvas.height - cropBox.h));
     } else if (cropState === 'resizing') {
+        // Adjust edges based on which handle is being pulled
         if (currentHandle.includes('w')) { cropBox.x += dx; cropBox.w -= dx; }
         if (currentHandle.includes('e')) { cropBox.w += dx; }
         if (currentHandle.includes('n')) { cropBox.y += dy; cropBox.h -= dy; }
         if (currentHandle.includes('s')) { cropBox.h += dy; }
+
+        // Prevent the box from becoming too small (min 50px)
         cropBox.w = Math.max(50, cropBox.w);
         cropBox.h = Math.max(50, cropBox.h);
+
+        // Optional: Add logic here if you want to prevent resizing outside boundaries
     }
+
+    // Update start positions for the next movement frame
     startX = endX;
     startY = endY;
+
+    // Redraw the canvas with the new box position
     drawCropBox();
 }
 
@@ -205,28 +251,46 @@ cancelCropBtn.addEventListener("click", () => {
 
 retakeBtn.addEventListener("click", () => { fileInput.click(); });
 
-// --- API ANALYSIS ---
+// --- API ANALYSIS (Updated for Option 3: Waking Up Status) ---
 confirmBtn.addEventListener('click', async () => {
   if (!selectedFile) return;
+  
   cropButtons.style.display = "none";
   spinner.style.display = "block"; 
-  result.textContent = "Analyzing ingredients...";
+  
+  // Show "Waking Up" message immediately for better phone UX
+  result.innerHTML = `
+    <div style="text-align:center; padding: 20px; background: #fff9e6; border-radius: 12px; border: 1px solid #ffeeba; margin-top: 15px;">
+        <p>🚀 <b>Waking up AI server...</b></p>
+        <p style="font-size: 0.8em; color: #856404;">If this is the first scan in a while, it may take 30 seconds. Please stay on this screen!</p>
+    </div>
+  `;
+  result.style.display = "block";
+
   const formData = new FormData();
   formData.append('file', selectedFile, "label.jpg");
+  
   try {
     const res = await fetch("https://jain-product-identifier-api.onrender.com/classify", {
       method: "POST",
       body: formData,
     });
+    
     spinner.style.display = "none";
     if (!res.ok) throw new Error(`Server Error: ${res.status}`);
+    
     const data = await res.json();
-    console.log('API response:', data); // <-- add this line to inspect is_veg/is_vegan and paths
+    console.log('API response:', data); 
     displayFormattedResult(data);
-// ...existing code...
+
   } catch (err) {
     spinner.style.display = "none";
-    result.textContent = `🚫 Error: ${err.message}`;
+    result.innerHTML = `
+        <div style="background: #f8d7da; color: #721c24; padding: 15px; border-radius: 8px; text-align: center;">
+            🚫 <b>Error:</b> ${err.message}<br>
+            <small>The server might still be waking up. Try confirming again.</small>
+        </div>
+    `;
     cropButtons.style.display = "flex";
   }
 });

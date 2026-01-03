@@ -318,3 +318,41 @@ h1 {
     font-size: 18px;
     line-height: 1;
 }
+
+/* Styling for the Revert Button */
+#revert-btn {
+    background-color: #ff9800; /* Distinct orange color */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: none; /* Hidden by default until JS shows it */
+    align-items: center;
+    gap: 8px;
+}
+
+#revert-btn:hover {
+    background-color: #e68a00;
+}
+
+#revert-btn:active {
+    transform: scale(0.98);
+}
+
+/* Optional: Add an icon effect using a pseudo-element if you aren't using an image */
+#revert-btn::before {
+    content: "↩"; 
+    font-size: 1.2em;
+}
+
+/* Ensure buttons in the crop-buttons container are spaced nicely */
+#crop-buttons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+}

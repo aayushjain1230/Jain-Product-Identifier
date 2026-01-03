@@ -204,6 +204,7 @@ confirmCropBtn.addEventListener("click", () => {
     tempCanvas.width = cropBox.w;
     tempCanvas.height = cropBox.h;
     tempCtx.drawImage(originalImg, cropBox.x, cropBox.y, cropBox.w, cropBox.h, 0, 0, cropBox.w, cropBox.h);
+    
     tempCanvas.toBlob(blob => {
         selectedFile = blob;
         preview.src = URL.createObjectURL(blob);
@@ -211,8 +212,12 @@ confirmCropBtn.addEventListener("click", () => {
         preview.style.display = "block";
         cropButtons.style.display = "flex";
         
-        // Show the revert button once a crop is applied
-        if (revertBtn) revertBtn.style.display = "inline-block";
+        // --- ADD THE LINE HERE ---
+        if (revertBtn) {
+            revertBtn.style.display = "inline-block";
+        }
+        // -------------------------
+
     }, "image/jpeg", 0.95);
 });
 
@@ -292,34 +297,31 @@ function displayFormattedResult(data) {
   result.style.display = "block";
   let html = "";
 
-  // --- 1. OVERALL STATUS SUMMARY ---
+  // This block creates the Overview/Summary at the top
   let statusTitle = "Jain";
   let statusClass = "jain-status";
   let statusIcon = "✅";
   let statusMessage = "This product appears to be Jain-friendly.";
 
-  if (Array.isArray(data.non_jain_ingredients) && data.non_jain_ingredients.length > 0) {
+  if (data.non_jain_ingredients?.length > 0) {
       statusTitle = "Non-Jain";
       statusClass = "non-jain-status";
       statusIcon = "🚫";
       statusMessage = "This product contains non-Jain ingredients.";
-  } else if (Array.isArray(data.uncertain_ingredients) && data.uncertain_ingredients.length > 0) {
+  } else if (data.uncertain_ingredients?.length > 0) {
       statusTitle = "Uncertain";
       statusClass = "uncertain-status";
       statusIcon = "⚠️";
       statusMessage = "Generally Jain, but contains ingredients to eat at your own risk.";
   }
 
-  // Add the status box to the top
-  html += `
-    <div class="overall-status ${statusClass}">
-        <div class="status-header">
-            <span class="status-icon-large">${statusIcon}</span>
-            <h2>${statusTitle}</h2>
-        </div>
-        <p>${statusMessage}</p>
-    </div>
-  `;
+  html += `<div class="overall-status ${statusClass}">
+            <div class="status-header">
+                <span class="status-icon-large">${statusIcon}</span>
+                <h2>${statusTitle}</h2>
+            </div>
+            <p>${statusMessage}</p>
+           </div>`;
 
   // --- 2. EXISTING NOTE/SUMMARY ---
   if (data.summary?.note) {

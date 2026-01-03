@@ -1,4 +1,3 @@
-# ...existing code...
 import os
 import json
 import re
@@ -96,6 +95,11 @@ def group_items_from_list(items_list):
 def index():
     return render_template('index.html')
 
+# New lightweight route for cron-job.org to keep the app awake
+@app.route('/health')
+def health_check():
+    return "OK", 200
+
 @app.route('/classify', methods=['POST'])
 def classify_ingredients():
     if 'file' not in request.files:
@@ -143,4 +147,3 @@ def classify_ingredients():
 
 if __name__ == '__main__':
     app.run(debug=True)
-# ...existing code...

@@ -21,9 +21,11 @@ const retakeBtn = document.getElementById('retake-btn');
 const confirmBtn = document.getElementById('confirm-btn');
 const confirmCropBtn = document.getElementById('confirmCropBtn');
 const cancelCropBtn = document.getElementById('cancelCropBtn');
+const revertBtn = document.getElementById('revert-btn'); // Added Revert Button
 
-// --- CROP STATE VARIABLES ---
+// --- STATE VARIABLES ---
 let selectedFile = null;
+let originalFileBackup = null; // Stores the raw uncropped file
 let originalImg = null;
 let cropState = 'idle'; // 'idle', 'moving', 'resizing'
 let currentHandle = null;
@@ -62,6 +64,9 @@ fileInput.addEventListener('change', (e) => {
   if (!file) return;
 
   selectedFile = file;
+  originalFileBackup = file; // Backup the original for the Revert function
+  
+  if (revertBtn) revertBtn.style.display = "none"; // Hide revert on new upload
   tipBox.classList.add("hidden");
   if (scanAnimation) scanAnimation.style.display = "none";
 
@@ -76,12 +81,9 @@ fileInput.addEventListener('change', (e) => {
   reader.readAsDataURL(file);
 });
 
-// --- CROP BOX INTERACTION LOGIC ---
+// --- CROP BOX INTERACTION LOGIC (iPhone Optimized) ---
 function getHandle(mx, my) {
     const { x, y, w, h } = cropBox;
-    
-    // Increase tolerance specifically for touch. 
-    // This creates a larger "invisible" hit box around the corners.
     const tolerance = handleSize * 1.5; 
 
     const isNear = (px, py) => (
@@ -89,97 +91,65 @@ function getHandle(mx, my) {
         my >= py - tolerance && my <= py + tolerance
     );
 
-    // Check corners first (Top-Left, Top-Right, Bottom-Right, Bottom-Left)
     if (isNear(x, y)) return 'nw';
     if (isNear(x + w, y)) return 'ne';
     if (isNear(x + w, y + h)) return 'se';
     if (isNear(x, y + h)) return 'sw';
 
-    // Check if the touch is anywhere inside the box to move the whole thing
     if (mx > x && mx < x + w && my > y && my < y + h) return 'body';
-
     return null;
 }
 
 function handleStart(e) {
     const rect = cropCanvas.getBoundingClientRect();
-    
-    // Scale factors to account for CSS resizing
     const scaleX = cropCanvas.width / rect.width;
     const scaleY = cropCanvas.height / rect.height;
 
-    // Support both Touch (iPhone) and Mouse
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
     const clientY = e.touches ? e.touches[0].clientY : e.clientY;
 
-    // Convert to internal canvas coordinates
     startX = (clientX - rect.left) * scaleX;
     startY = (clientY - rect.top) * scaleY;
 
-    // Check if the user touched a handle (corner) or the body of the box
     currentHandle = getHandle(startX, startY);
 
     if (currentHandle) {
-        // Prevent the iPhone from trying to select text or scroll during the initial touch
         if (e.cancelable) e.preventDefault();
-        
         cropState = (currentHandle === 'body') ? 'moving' : 'resizing';
     }
 }
 
 function handleMove(e) {
     if (cropState === 'idle') return;
-
-    // Prevent iPhone from scrolling while you drag the crop box
-    if (e.cancelable) {
-        e.preventDefault();
-    }
+    if (e.cancelable) e.preventDefault();
 
     const rect = cropCanvas.getBoundingClientRect();
-    
-    // Calculate scale factors in case the canvas is resized by CSS
     const scaleX = cropCanvas.width / rect.width;
     const scaleY = cropCanvas.height / rect.height;
 
-    // Support both Touch (iPhone/Android) and Mouse (Computer)
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
     const clientY = e.touches ? e.touches[0].clientY : e.clientY;
 
-    // Convert screen coordinates to Canvas coordinates
     const endX = (clientX - rect.left) * scaleX;
     const endY = (clientY - rect.top) * scaleY;
-
-    // Calculate how much the finger/mouse moved
     const dx = endX - startX;
     const dy = endY - startY;
 
     if (cropState === 'moving') {
-        // Move the entire box
         cropBox.x += dx;
         cropBox.y += dy;
-
-        // Keep the box inside the image boundaries
         cropBox.x = Math.max(0, Math.min(cropBox.x, cropCanvas.width - cropBox.w));
         cropBox.y = Math.max(0, Math.min(cropBox.y, cropCanvas.height - cropBox.h));
     } else if (cropState === 'resizing') {
-        // Adjust edges based on which handle is being pulled
         if (currentHandle.includes('w')) { cropBox.x += dx; cropBox.w -= dx; }
         if (currentHandle.includes('e')) { cropBox.w += dx; }
         if (currentHandle.includes('n')) { cropBox.y += dy; cropBox.h -= dy; }
         if (currentHandle.includes('s')) { cropBox.h += dy; }
-
-        // Prevent the box from becoming too small (min 50px)
         cropBox.w = Math.max(50, cropBox.w);
         cropBox.h = Math.max(50, cropBox.h);
-
-        // Optional: Add logic here if you want to prevent resizing outside boundaries
     }
-
-    // Update start positions for the next movement frame
     startX = endX;
     startY = endY;
-
-    // Redraw the canvas with the new box position
     drawCropBox();
 }
 
@@ -240,8 +210,22 @@ confirmCropBtn.addEventListener("click", () => {
         cropContainer.style.display = "none";
         preview.style.display = "block";
         cropButtons.style.display = "flex";
+        
+        // Show the revert button once a crop is applied
+        if (revertBtn) revertBtn.style.display = "inline-block";
     }, "image/jpeg", 0.95);
 });
+
+// --- REVERT LOGIC ---
+if (revertBtn) {
+    revertBtn.addEventListener("click", () => {
+        if (!originalFileBackup) return;
+        selectedFile = originalFileBackup;
+        preview.src = URL.createObjectURL(originalFileBackup);
+        revertBtn.style.display = "none"; // Hide until cropped again
+        result.innerHTML = '<div style="text-align:center; padding: 10px; color: #666;">Changes reverted to original photo.</div>';
+    });
+}
 
 cancelCropBtn.addEventListener("click", () => {
     cropContainer.style.display = "none";
@@ -251,14 +235,13 @@ cancelCropBtn.addEventListener("click", () => {
 
 retakeBtn.addEventListener("click", () => { fileInput.click(); });
 
-// --- API ANALYSIS (Updated for Option 3: Waking Up Status) ---
+// --- API ANALYSIS ---
 confirmBtn.addEventListener('click', async () => {
   if (!selectedFile) return;
   
   cropButtons.style.display = "none";
   spinner.style.display = "block"; 
   
-  // Show "Waking Up" message immediately for better phone UX
   result.innerHTML = `
     <div style="text-align:center; padding: 20px; background: #fff9e6; border-radius: 12px; border: 1px solid #ffeeba; margin-top: 15px;">
         <p>🚀 <b>Waking up AI server...</b></p>
@@ -280,7 +263,6 @@ confirmBtn.addEventListener('click', async () => {
     if (!res.ok) throw new Error(`Server Error: ${res.status}`);
     
     const data = await res.json();
-    console.log('API response:', data); 
     displayFormattedResult(data);
 
   } catch (err) {
@@ -295,7 +277,6 @@ confirmBtn.addEventListener('click', async () => {
   }
 });
 
-// --- HELPER: parse boolean-like values safely ---
 function parseBool(v) {
   if (typeof v === 'boolean') return v;
   if (typeof v === 'number') return v !== 0;

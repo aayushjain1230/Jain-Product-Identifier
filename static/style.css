@@ -396,3 +396,37 @@ h1 {
 .status-header h2 {
     text-transform: capitalize;
 }
+
+/* 1. Hide the Google branding and "Powered by" text */
+.goog-logo-link, 
+.goog-te-gadget span, 
+.goog-te-banner-frame.skiptranslate {
+    display: none !important;
+}
+
+.goog-te-gadget {
+    color: transparent !important;
+}
+
+/* 2. Style the dropdown box to match your Poppins font */
+#google_translate_element select {
+    background-color: #ffffff;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-family: 'Poppins', sans-serif !important; /* Matches your font choice */
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+/* 3. Add a slight hover effect to the dropdown */
+#google_translate_element select:hover {
+    border-color: #2ecc71; /* Matches your green theme */
+}
+
+/* 4. Ensure the widget doesn't push the top of the page down */
+body {
+    top: 0 !important;
+}

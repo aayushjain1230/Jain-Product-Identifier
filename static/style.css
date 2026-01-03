@@ -299,3 +299,12 @@ h1 {
         font-size: 1rem;
     }
 }
+
+#cropCanvas {
+    touch-action: none; /* Critical: Prevents the page from scrolling while dragging */
+    -webkit-user-select: none; /* Prevents text selection while dragging */
+    user-select: none;
+    max-width: 100%;
+    height: auto;
+    border: 2px solid #e53935;
+}

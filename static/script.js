@@ -215,10 +215,8 @@ confirmCropBtn.addEventListener("click", () => {
         // --- ADD THE LINE HERE ---
         if (revertBtn) revertBtn.style.display = "inline-block";
         
-        
-
     }, "image/jpeg", 0.95);
-});
+
 
 // --- REVERT LOGIC ---
 if (revertBtn) {
@@ -366,3 +364,11 @@ if(infoBtn) infoBtn.onclick = () => infoModal.style.display = "flex";
 document.getElementById("closeModal").onclick = () => infoModal.style.display = "none";
 document.getElementById("modalOk").onclick = () => infoModal.style.display = "none";
 window.onclick = (e) => { if (e.target === infoModal) infoModal.style.display = "none"; };
+
+// --- UPLOAD BUTTON TRIGGER ---
+const scanLabelBtn = document.getElementById('scan-label-btn');
+if (scanLabelBtn && fileInput) {
+    scanLabelBtn.addEventListener('click', () => {
+        fileInput.click();
+    });
+}

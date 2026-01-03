@@ -360,3 +360,35 @@ h1 {
     gap: 10px;
     margin-top: 15px;
 }
+
+.overall-status {
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    text-align: center;
+    border: 2px solid;
+}
+
+.status-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 5px;
+}
+
+.status-header h2 {
+    margin: 0;
+    font-size: 1.8em;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.status-icon-large {
+    font-size: 2em;
+}
+
+/* Status Colors */
+.jain-status { background-color: #e8f5e9; border-color: #4caf50; color: #1b5e20; }
+.non-jain-status { background-color: #ffebee; border-color: #ef5350; color: #b71c1c; }
+.uncertain-status { background-color: #fffde7; border-color: #fbc02d; color: #f57f17; }

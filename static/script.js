@@ -213,10 +213,9 @@ confirmCropBtn.addEventListener("click", () => {
         cropButtons.style.display = "flex";
         
         // --- ADD THE LINE HERE ---
-        if (revertBtn) {
-            revertBtn.style.display = "inline-block";
+        if (revertBtn) revertBtn.style.display = "inline-block";
         }
-        // -------------------------
+        
 
     }, "image/jpeg", 0.95);
 });
@@ -303,7 +302,7 @@ function displayFormattedResult(data) {
   let statusIcon = "✅";
   let statusMessage = "This product appears to be Jain-friendly.";
 
-  if (Array.isArray(data.non_jain_ingredients) && data.non_jain_ingredients.length > 0) {
+  if (data.non_jain_ingredients && data.non_jain_ingredients.length > 0) {
       statusTitle = "Non-Jain"; // Updated to "Non-Jain"
       statusClass = "non-jain-status";
       statusIcon = "🚫";

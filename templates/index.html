@@ -61,11 +61,12 @@
   </div>
 
   <div class="bottom-bar">
-    <label for="uploaded_image" class="upload-btn">Scan a Label</label>
     <div id="info-btn" class="info-icon">i</div>
-    <input type="file" id="uploaded_image" accept="image/*" capture="environment">
+    
+    <input type="file" id="uploaded_image" accept="image/*" capture="environment" style="display: none;">
+    
     <button id="scan-label-btn" class="main-btn">Scan a Label</button>
-  </div>
+</div>
 
   <script src="{{ url_for('static', filename='script.js') }}"></script>
   <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.5/dist/dotlottie-wc.js" type="module"></script>

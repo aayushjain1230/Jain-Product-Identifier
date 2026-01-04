@@ -340,3 +340,19 @@ h1 {
     }
     .upload-btn { padding: 14px 20px; font-size: 1rem; }
 }
+
+/* Animation for the translate widget */
+@keyframes fadeInSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.translate-wrapper {
+  animation: fadeInSlide 0.8s ease-out forwards;
+}
